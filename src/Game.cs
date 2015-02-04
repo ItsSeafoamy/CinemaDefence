@@ -25,30 +25,29 @@ using System.Collections;
 public class Game {
 	
 	public static int money; //How much money the player currently has.
-	
-	//These are the current levels of each tower. 0 means the tower has not yet been unlocked
-	public static int popcornLevel = 1;
-	public static int hotdogLevel = 0;
-	public static int coffeeLevel = 0;
-	public static int sodaLevel = 0;
-	public static int bubblegumLevel = 0;
-	public static int iceCreamLevel = 0;
-	
+		
 	//Statistics
 	public static int shotsFired = 0; //Total time all towers have fired
 	public static int enemiesKilled = 0; //Total enemies defeated
 	public static int fails = 0; //Fail counter
+	
+	//Array of all tower types. This means we can easily add or remove towers without having to change too much code
+	public static System.Type[] towers = new System.Type[]{
+		typeof(PopcornGun)
+	};
 	
 	/**
 	*	Resets money and towers. Used when starting a new game
 	*/
 	public static void reset(){
 		money = 0;
-		popcornLevel = 1;
-		hotdogLevel = 0;
-		coffeeLevel = 0;
-		sodaLevel = 0;
-		bubblegumLevel = 0;
-		iceCreamLevel = 0;
+		
+		foreach (System.Type t in towers){
+			if (t == typeof(PopcornGun)){
+				t.GetProperty("currentLevel").SetValue(null, 1, null); //We start with the popcorn gun already unlocked :)
+			} else {
+				t.GetProperty("currentLevel").SetValue(null, 0, null);
+			}
+		}
 	}
 }
