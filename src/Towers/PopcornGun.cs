@@ -22,9 +22,11 @@ public class PopcornGun : Tower {
 
 	public static int[] upgradeCost {get; protected set;}
 	public static int currentLevel {get; set;}
+	public static float[] baseDamage {get; protected set;}
 	
 	static PopcornGun() {
-		upgradeCost = new int[]{0, 1000, 10000};
+		upgradeCost = new int[]{0, 1000, 10000}; //All values subject to change, and probably will
 		currentLevel = 1;
+		baseDamage = new float[]{1, 2, 4};
 	}
 }
