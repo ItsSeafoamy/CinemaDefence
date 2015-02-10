@@ -18,13 +18,15 @@
 using UnityEngine;
 using System.Collections;
 
-public class PopcornGun : Tower {
-
-	public static int[] upgradeCost {get; protected set;}
-	public static int currentLevel {get; set;}
+public abstract class Enemy : MonoBehaviour {
 	
-	static PopcornGun() {
-		upgradeCost = new int[]{0, 1000, 10000}; //All values subject to change, and probably will
-		currentLevel = 1;
+	public float maxHealth;
+	[System.NonSerialized] //We don't want Unity setting the health with the inspector :)
+	public float health;
+	
+	public float speed; //How fast the enemy moves
+	
+	void Start(){
+		health = maxHealth; //Set the health as being the max health
 	}
 }

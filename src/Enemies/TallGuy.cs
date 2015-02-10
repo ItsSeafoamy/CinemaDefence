@@ -18,13 +18,8 @@
 using UnityEngine;
 using System.Collections;
 
-public class PopcornGun : Tower {
-
-	public static int[] upgradeCost {get; protected set;}
-	public static int currentLevel {get; set;}
+public class TallGuy : Enemy {
 	
-	static PopcornGun() {
-		upgradeCost = new int[]{0, 1000, 10000}; //All values subject to change, and probably will
-		currentLevel = 1;
-	}
+	
+	
 }

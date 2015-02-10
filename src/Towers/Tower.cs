@@ -31,7 +31,9 @@ public abstract class Tower : MonoBehaviour {
 	
 	public static int currentLevel {get; set;} //The current level of the tower.
 
-	public static float[] baseDamage {get; protected set;} //How much damage this tower does under normal conditions
+	public float[] baseDamage; //How much damage this tower does under normal conditions
+	public float fireRate; //The delay between each shot, in seconds
+	protected float cooldown; //How long before we can fire again
 	
 	protected int targetMode; //Controls what enemies this target should prioritise over
 	protected const int FIRST_SPOTTED = 0; //Prioritises based on the order the enemies entered the trigger zone
@@ -40,7 +42,7 @@ public abstract class Tower : MonoBehaviour {
 	protected const int STRONGEST = 3; //Targets based on the amount of health the enemies have
 	protected const int WEAKEST = 4; //Targets the enemies with less health first
 	
-	protected List<Enemy> tracked = new List<Enemy>(); //List of all enemies in the trigger zone. TODO: Make enemy class
+	protected List<Enemy> tracked = new List<Enemy>(); //List of all enemies in the trigger zone.
 	protected Enemy target; //Which enemy we're currently targetting
 	
 	/**
@@ -71,15 +73,36 @@ public abstract class Tower : MonoBehaviour {
 	void SelectTarget(){
 		switch (targetMode){
 		case FIRST_SPOTTED:
-			target = tracked[0];
+			if (tracked.Count > 0) //Make sure enemies are being tracked
+				target = tracked[0];
+			else 
+				target = null;
 			break;
-		case FURTHEST: //TODO: Have to make the enemy stuff before these are possible
+		case FURTHEST: //TODO: This bit :)
 			break;
 		case LAST:
 			break;
 		case STRONGEST:
+			target = null;
+			
+			foreach (Enemy e in tracked){
+				if (target == null){
+					target = e;
+				} else if (e.health > target.health){
+					target = e;
+				}
+			}
 			break;
 		case WEAKEST:
+			target = null;
+			
+			foreach (Enemy e in tracked){
+				if (target == null){
+					target = e;
+				} else if (e.health < target.health){
+					target = e;
+				}
+			}
 			break;
 		}
 	}
