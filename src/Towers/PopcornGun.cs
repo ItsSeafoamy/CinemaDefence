@@ -29,7 +29,7 @@ public class PopcornGun : Tower {
 	}
 	
 	public override void Fire(){
-		Bullet bullet = (Bullet) Instantiate(bullet, transform.position, transform.rotation);
+		Bullet bullet = (Bullet) Instantiate(this.bullet, transform.position, transform.rotation);
 		bullet.shooter = this;
 		bullet.transform.LookAt(target.transform.position);
 	}
