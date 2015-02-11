@@ -30,6 +30,8 @@ public abstract class Tower : MonoBehaviour {
 	public static int[] upgradeCost {get; protected set;}
 	
 	public static int currentLevel {get; set;} //The current level of the tower.
+	
+	public Bullet bullet; //The bullet prefab this tower shoots
 
 	public float[] baseDamage; //How much damage this tower does under normal conditions
 	public float fireRate; //The delay between each shot, in seconds
@@ -44,6 +46,17 @@ public abstract class Tower : MonoBehaviour {
 	
 	protected List<Enemy> tracked = new List<Enemy>(); //List of all enemies in the trigger zone.
 	protected Enemy target; //Which enemy we're currently targetting
+	
+	public abstract void Fire();
+	
+	void Update(){
+		if (cooldown < 0){
+			cooldown = fireRate;
+			Fire();
+		} 
+		
+		cooldown -= Time.deltaTime;
+	}
 	
 	/**
 	*	Fired when another collider enters this tower's trigger zone, should be an enemy

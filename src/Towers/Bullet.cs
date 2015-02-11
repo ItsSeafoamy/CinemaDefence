@@ -18,19 +18,14 @@
 using UnityEngine;
 using System.Collections;
 
-public class PopcornGun : Tower {
-
-	public static int[] upgradeCost {get; protected set;}
-	public static int currentLevel {get; set;}
+public class Bullet : MonoBehaviour {
 	
-	static PopcornGun() {
-		upgradeCost = new int[]{0, 1000, 10000}; //All values subject to change, and probably will
-		currentLevel = 1;
-	}
+	[System.NonSerialized]
+	public Tower shooter; //Which tower fired this bullet?
 	
-	public override void Fire(){
-		Bullet bullet = (Bullet) Instantiate(bullet, transform.position, transform.rotation);
-		bullet.shooter = this;
-		bullet.transform.LookAt(target.transform.position);
+	public float speed;
+	
+	void Update(){
+		transform.Translate(new Vector3(speed, 0, 0), Space.Self);
 	}
 }

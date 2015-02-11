@@ -39,7 +39,7 @@ public class Game {
 	/**
 	*	Resets money and towers. Used when starting a new game
 	*/
-	public static void reset(){
+	public static void Reset(){
 		money = 0;
 		
 		foreach (System.Type t in towers){
