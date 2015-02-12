@@ -18,7 +18,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Enemy : MonoBehaviour 
+public abstract class Enemy : MonoBehaviour 
 {
 	public float health = 5;
 	public float movementSpeed = 10;
