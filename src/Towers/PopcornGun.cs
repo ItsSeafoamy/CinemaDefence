@@ -33,4 +33,8 @@ public class PopcornGun : Tower {
 		bullet.shooter = this;
 		bullet.transform.LookAt(target.transform.position);
 	}
+	
+	public override float GetDamage(){
+		return baseDamage[PopcornGun.currentLevel];
+	}
 }

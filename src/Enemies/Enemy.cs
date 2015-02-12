@@ -1,5 +1,5 @@
-﻿/*
-*	Copyright (C) 2015 Dylan McCormack
+/*
+*	Copyright (C) 2015 Alexander Prince, Dylan McCormack
 *	
 *	This program is free software; you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -18,15 +18,27 @@
 using UnityEngine;
 using System.Collections;
 
-public abstract class Enemy : MonoBehaviour {
+public class Enemy : MonoBehaviour 
+{
+	public float health = 5;
+	public float movementSpeed = 10;
 	
-	public float maxHealth;
-	[System.NonSerialized] //We don't want Unity setting the health with the inspector :)
-	public float health;
-	
-	public float speed; //How fast the enemy moves
-	
-	void Start(){
-		health = maxHealth; //Set the health as being the max health
+	// Update is called once per frame
+	void Update () 
+	{
+		transform.Translate(Vector3.right * movementSpeed * Time.deltaTime);
+		if(health <= 0)
+		{
+			Destroy (gameObject);
+		}
+	}
+
+	void OnCollisionEnter(Collision hit)
+	{
+		if (hit.gameObject.tag == "Bullet"){
+			Bullet b = hit.gameObject.GetComponent<Bullet>();
+			Tower shooter = b.shooter;
+			health -= shooter.GetDamage();
+		}
 	}
 }

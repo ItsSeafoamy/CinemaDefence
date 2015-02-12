@@ -48,6 +48,7 @@ public abstract class Tower : MonoBehaviour {
 	protected Enemy target; //Which enemy we're currently targetting
 	
 	public abstract void Fire();
+	public abstract float GetDamage();
 	
 	void Update(){
 		if (cooldown < 0){
