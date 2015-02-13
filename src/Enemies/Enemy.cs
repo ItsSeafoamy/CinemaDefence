@@ -17,11 +17,15 @@
 */
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public abstract class Enemy : MonoBehaviour 
 {
 	public float health = 5;
 	public float movementSpeed = 10;
+	
+	[System.NonSerialized]
+	public List<Tower> watchers = new List<Tower>();
 	
 	// Update is called once per frame
 	void Update () 
@@ -39,7 +43,17 @@ public abstract class Enemy : MonoBehaviour
 			Bullet b = hit.gameObject.GetComponent<Bullet>();
 			Tower shooter = b.shooter;
 			health -= shooter.GetDamage();
+			
 			Destroy(b.gameObject);
+			
+			if (health <= 0){
+				foreach (Tower t in watchers){
+					t.tracked.Remove(this);
+					t.SelectTarget();
+				}
+				
+				Destroy(gameObject);
+			}
 		}
 	}
 }

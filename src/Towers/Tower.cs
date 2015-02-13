@@ -44,7 +44,8 @@ public abstract class Tower : MonoBehaviour {
 	protected const int STRONGEST = 3; //Targets based on the amount of health the enemies have
 	protected const int WEAKEST = 4; //Targets the enemies with less health first
 	
-	protected List<Enemy> tracked = new List<Enemy>(); //List of all enemies in the trigger zone.
+	[System.NonSerialized]
+	public List<Enemy> tracked = new List<Enemy>(); //List of all enemies in the trigger zone.
 	protected Enemy target; //Which enemy we're currently targetting
 	
 	public abstract void Fire();
@@ -67,6 +68,7 @@ public abstract class Tower : MonoBehaviour {
 		if (other.tag == "Enemy"){ //[Safety] Check if the collider was an enemy
 			Enemy e = other.GetComponent<Enemy>();
 			tracked.Add(e); //Add the enemy to the list of tracked enemies
+			e.watchers.Add(this); //Add this tower to the enemy's list of watchers
 			SelectTarget();
 		}
 	}
@@ -78,6 +80,7 @@ public abstract class Tower : MonoBehaviour {
 		if (other.tag == "Enemy"){
 			Enemy e = other.GetComponent<Enemy>();
 			tracked.Remove(e); //Remove the enemy from the list of tracked enemies
+			e.watchers.Remove(this); //Remove this tower to the enemy's list of watchers
 			SelectTarget();
 		}
 	}
@@ -85,7 +88,7 @@ public abstract class Tower : MonoBehaviour {
 	/**
 	*	Updates who we should be targetting. Should be fired whenever the list of tracked enemies changes
 	*/
-	void SelectTarget(){
+	public void SelectTarget(){
 		switch (targetMode){
 		case FIRST_SPOTTED:
 			if (tracked.Count > 0) //Make sure enemies are being tracked
