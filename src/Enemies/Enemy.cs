@@ -26,19 +26,20 @@ public abstract class Enemy : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		transform.Translate(Vector3.right * movementSpeed * Time.deltaTime);
+		transform.Translate(Vector3.down * movementSpeed * Time.deltaTime);
 		if(health <= 0)
 		{
 			Destroy (gameObject);
 		}
 	}
 
-	void OnCollisionEnter(Collision hit)
+	void OnCollisionEnter2D(Collision2D hit)
 	{
 		if (hit.gameObject.tag == "Bullet"){
 			Bullet b = hit.gameObject.GetComponent<Bullet>();
 			Tower shooter = b.shooter;
 			health -= shooter.GetDamage();
+			Destroy(b.gameObject);
 		}
 	}
 }

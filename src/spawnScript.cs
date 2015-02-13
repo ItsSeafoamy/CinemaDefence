@@ -24,12 +24,8 @@ public class spawnScript : MonoBehaviour
 	public float minTime = 1f;
 	public float maxTime = 2f;
 	public GameObject[] enemies; 
-	public int enemyNumber = 30;
-	// Use this for initialization
-	void Start () 
-	{
+	int enemyNumber;
 	
-	}
 	IEnumerator SpawnObject(int index, float seconds)
 	{
 		//make sure they're not all spawning on top of each oter
@@ -37,15 +33,14 @@ public class spawnScript : MonoBehaviour
 		yield return new WaitForSeconds(seconds);
 		Instantiate(enemies[index], transform.position, transform.rotation);    
 		isSpawning = false;
-
 	}
 	
 	void Update () 
 	{
 		//check if spawned and if possible to spawn
-		if(! isSpawning && enemyNumber > 0)
+		if(! isSpawning && enemyNumber < enemies.Length)
 		{
-			enemyNumber = enemyNumber - 1;
+			enemyNumber++;
 			isSpawning = true; 
 			int enemyIndex = Random.Range(0, enemies.Length);
 			StartCoroutine(SpawnObject(enemyIndex, Random.Range(minTime, maxTime)));

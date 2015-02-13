@@ -51,7 +51,7 @@ public abstract class Tower : MonoBehaviour {
 	public abstract float GetDamage();
 	
 	void Update(){
-		if (cooldown < 0){
+		if (cooldown < 0 && target != null){
 			cooldown = fireRate;
 			Fire();
 		} 
@@ -62,7 +62,8 @@ public abstract class Tower : MonoBehaviour {
 	/**
 	*	Fired when another collider enters this tower's trigger zone, should be an enemy
 	*/
-	void OnTriggerEnter(Collider other){
+	void OnTriggerEnter2D(Collider2D other){
+		Debug.Log("Triggered");
 		if (other.tag == "Enemy"){ //[Safety] Check if the collider was an enemy
 			Enemy e = other.GetComponent<Enemy>();
 			tracked.Add(e); //Add the enemy to the list of tracked enemies
@@ -73,7 +74,7 @@ public abstract class Tower : MonoBehaviour {
 	/**
 	*	Fired when another collider leaves this tower's trigger zone, should be an enemy
 	*/
-	void OnTriggerLeave(Collider other){
+	void OnTriggerExit2D(Collider2D other){
 		if (other.tag == "Enemy"){
 			Enemy e = other.GetComponent<Enemy>();
 			tracked.Remove(e); //Remove the enemy from the list of tracked enemies

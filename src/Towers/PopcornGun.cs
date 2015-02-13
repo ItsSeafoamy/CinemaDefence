@@ -29,9 +29,10 @@ public class PopcornGun : Tower {
 	}
 	
 	public override void Fire(){
-		Bullet bullet = (Bullet) Instantiate(this.bullet, transform.position, transform.rotation);
+		Bullet bullet = (Bullet) Instantiate(this.bullet, transform.position, Quaternion.identity);
 		bullet.shooter = this;
-		bullet.transform.LookAt(target.transform.position);
+		Vector3 dir = (target.transform.position - transform.position).normalized;
+		bullet.direction = dir;
 	}
 	
 	public override float GetDamage(){

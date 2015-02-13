@@ -24,8 +24,9 @@ public class Bullet : MonoBehaviour {
 	public Tower shooter; //Which tower fired this bullet?
 	
 	public float speed;
+	public Vector3 direction;
 	
 	void Update(){
-		transform.Translate(new Vector3(speed, 0, 0), Space.Self);
+		transform.Translate(direction * speed * Time.deltaTime);
 	}
 }
