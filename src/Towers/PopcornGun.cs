@@ -36,6 +36,6 @@ public class PopcornGun : Tower {
 	}
 	
 	public override float GetDamage(){
-		return baseDamage[PopcornGun.currentLevel];
+		return baseDamage[PopcornGun.currentLevel - 1];
 	}
 }
