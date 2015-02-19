@@ -37,8 +37,7 @@ public abstract class Enemy : MonoBehaviour
 		}
 	}
 
-	void OnCollisionEnter2D(Collision2D hit)
-	{
+	void OnCollisionEnter2D(Collision2D hit){		
 		if (hit.gameObject.tag == "Bullet"){
 			Bullet b = hit.gameObject.GetComponent<Bullet>();
 			Tower shooter = b.shooter;
