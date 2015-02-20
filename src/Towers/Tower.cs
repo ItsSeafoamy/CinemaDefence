@@ -96,9 +96,27 @@ public abstract class Tower : MonoBehaviour {
 			else 
 				target = null;
 			break;
-		case FURTHEST: //TODO: This bit :)
+		case FURTHEST:
+			target = null;
+			
+			foreach (Enemy e in tracked){
+				if (target == null){
+					target = e;
+				} else if (e.transform.position.y < target.transform.position.y){
+					target = e;
+				}
+			}
 			break;
 		case LAST:
+			target = null;
+			
+			foreach (Enemy e in tracked){
+				if (target == null){
+					target = e;
+				} else if (e.transform.position.y > target.transform.position.y){
+					target = e;
+				}
+			}
 			break;
 		case STRONGEST:
 			target = null;

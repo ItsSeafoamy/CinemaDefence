@@ -23,10 +23,19 @@ public class Bullet : MonoBehaviour {
 	[System.NonSerialized]
 	public Tower shooter; //Which tower fired this bullet?
 	
-	public float speed;
-	public Vector3 direction;
+	public float speed; //The speed of the bullet
+	public Vector3 direction; //The direction the bullet is moving in
+	
+	void Start(){
+		StartCoroutine(Destroy());
+	}
 	
 	void Update(){
-		transform.Translate(direction * speed * Time.deltaTime);
+		transform.Translate(direction * speed * Time.deltaTime); //Move the bullet
+	}
+	
+	IEnumerator Destroy(){
+		yield return new WaitForSeconds(1f);
+		Destroy(gameObject); //Destroy bullets after 1 second to prevent any lag
 	}
 }
