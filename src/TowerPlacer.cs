@@ -30,6 +30,8 @@ public class TowerPlacer : MonoBehaviour {
 	public List<int> allowedLanes;
 	public int minY, maxY;
 	
+	List<Tower> placedTowers = new List<Tower>();
+	
 	void Update(){
 		if (isPlacing){
 			Vector3 point3 = Input.mousePosition; //Gets the position of the mouse on the screen
@@ -42,7 +44,13 @@ public class TowerPlacer : MonoBehaviour {
 			
 			if (point.y >= minY && point.y <= maxY && allowedLanes.Contains((int) (point.x + 0.5))){ //When the mouse button is pressed
 				if (Input.GetButtonDown("Fire1")){
-					Instantiate(holoTower.toSpawn, holoTower.transform.position, holoTower.transform.rotation); //Spawn the tower
+					if (GetTower(holoTower.transform.position) == null){
+						Tower tower = (Tower) Instantiate(holoTower.toSpawn, holoTower.transform.position, holoTower.transform.rotation); //Spawn the tower
+						placedTowers.Add(tower);
+					} else {
+						isPlacing = false;
+						Destroy(holoTower);
+					}
 				}
 				
 				holoTower.GetComponent<SpriteRenderer>().sprite = holoTower.valid; //Change the sprite to the "valid" sprite to show the player they can place the tower here
@@ -50,5 +58,19 @@ public class TowerPlacer : MonoBehaviour {
 				holoTower.GetComponent<SpriteRenderer>().sprite = holoTower.invalid; //Change the sprite to the "invalid" sprite
 			}
 		} 
+	}
+	
+	/**
+	*	Gets the tower at the specified position
+	*	Or null, if the space is empty.
+	*/
+	Tower GetTower(Vector3 position){
+		foreach (Tower t in placedTowers){
+			if (t.transform.position == position){
+				return t;
+			}
+		}
+		
+		return null;
 	}
 }

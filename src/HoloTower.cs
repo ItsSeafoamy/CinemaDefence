@@ -20,7 +20,7 @@ using System.Collections;
 
 public class HoloTower : MonoBehaviour {
 	
-	public GameObject toSpawn; //The tower to spawn
+	public Tower toSpawn; //The tower to spawn
 	public Sprite valid, invalid;
 	
 }
