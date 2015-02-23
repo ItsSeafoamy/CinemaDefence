@@ -1,5 +1,5 @@
 ﻿/*
-*	Copyright (C) 2015 Dylan McCormack
+*	Copyright (C) 2015 Dylan McCormack, Alexander Prince
 *	
 *	This program is free software; you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class TowerPlacer : MonoBehaviour {
+public class Level : MonoBehaviour {
 	
 	public int scale; //How big, in pixels, each square on the invisible grid would be
 	
@@ -32,7 +32,35 @@ public class TowerPlacer : MonoBehaviour {
 	
 	List<Tower> placedTowers = new List<Tower>();
 	
+	public Vector2[] spawnPoints;
+	bool isSpawning = false;
+	public float minTime = 1f;
+	public float maxTime = 2f;
+	public Enemy[] enemies; 
+	int enemyNumber;
+	
+	IEnumerator SpawnObject(int index, float seconds){
+		//make sure they're not all spawning on top of each oter
+		Debug.Log ("Waiting for " + seconds + " seconds");
+		yield return new WaitForSeconds(seconds);
+		
+		System.Random rand = new System.Random();
+		Vector2 point = spawnPoints[rand.Next(spawnPoints.Length)];
+		
+		Instantiate(enemies[index], new Vector3((point.x + 0.5f) * scale / 100f, (point.y + 0.5f) * scale / 100f), transform.rotation);
+		  
+		isSpawning = false;
+	}
+	
 	void Update(){
+		//check if spawned and if possible to spawn
+		if(!isSpawning && enemyNumber < enemies.Length){
+			enemyNumber++;
+			isSpawning = true; 
+			int enemyIndex = Random.Range(0, enemies.Length);
+			StartCoroutine(SpawnObject(enemyIndex, Random.Range(minTime, maxTime)));
+		}
+		
 		if (isPlacing){
 			Vector3 point3 = Input.mousePosition; //Gets the position of the mouse on the screen
 			Vector2 point = new Vector2(point3.x - (Screen.width / 2f), point3.y - (Screen.height / 2f)); //Convert to a 2D point with the origin in the center of the screen
@@ -42,14 +70,16 @@ public class TowerPlacer : MonoBehaviour {
 			
 			holoTower.transform.position = new Vector3((point.x * scale) / 100f, (point.y * scale) / 100f); //Move the holo tower to the nearest snap-point to the mouse
 			
-			if (point.y >= minY && point.y <= maxY && allowedLanes.Contains((int) (point.x + 0.5))){ //When the mouse button is pressed
+			if (point.y >= minY && point.y <= maxY && allowedLanes.Contains(Mathf.FloorToInt(point.x))){ //When the mouse button is pressed
 				if (Input.GetButtonDown("Fire1")){
-					if (GetTower(holoTower.transform.position) == null){
-						Tower tower = (Tower) Instantiate(holoTower.toSpawn, holoTower.transform.position, holoTower.transform.rotation); //Spawn the tower
-						placedTowers.Add(tower);
+					Tower tower = GetTower(holoTower.transform.position);
+					
+					if (tower == null){
+						Tower t = (Tower) Instantiate(holoTower.toSpawn, holoTower.transform.position, holoTower.transform.rotation); //Spawn the tower
+						placedTowers.Add(t);
 					} else {
-						isPlacing = false;
-						Destroy(holoTower);
+						placedTowers.Remove(tower);
+						Destroy(tower.gameObject);
 					}
 				}
 				
