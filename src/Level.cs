@@ -5,7 +5,7 @@
 *	it under the terms of the GNU General Public License as published by
 *	the Free Software Foundation; either version 2 of the License, or
 *	any later version.
-*		
+*	
 *	This program is distributed in the hope that it will be useful,
 *	but WITHOUT ANY WARRANTY; without even the implied warranty of
 *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -36,7 +36,9 @@ public class Level : MonoBehaviour {
 	bool isSpawning = false;
 	public float minTime = 1f;
 	public float maxTime = 2f;
-	public Enemy[] enemies; 
+	
+	public Wave[] waves;
+	int wave = 0;
 	int enemyNumber;
 	
 	IEnumerator SpawnObject(int index, float seconds){
@@ -47,18 +49,29 @@ public class Level : MonoBehaviour {
 		System.Random rand = new System.Random();
 		Vector2 point = spawnPoints[rand.Next(spawnPoints.Length)];
 		
-		Instantiate(enemies[index], new Vector3((point.x + 0.5f) * scale / 100f, (point.y + 0.5f) * scale / 100f), transform.rotation);
-		  
+		Instantiate(waves[wave][index], new Vector3((point.x + 0.5f) * scale / 100f, (point.y + 0.5f) * scale / 100f), transform.rotation);
+		
 		isSpawning = false;
 	}
 	
 	void Update(){
 		//check if spawned and if possible to spawn
-		if(!isSpawning && enemyNumber < enemies.Length){
-			enemyNumber++;
-			isSpawning = true; 
-			int enemyIndex = Random.Range(0, enemies.Length);
-			StartCoroutine(SpawnObject(enemyIndex, Random.Range(minTime, maxTime)));
+		if(!isSpawning){
+			if (enemyNumber < waves[wave].enemies.Length){
+				enemyNumber++;
+				isSpawning = true; 
+				int enemyIndex = Random.Range(0, waves[wave].enemies.Length);
+				StartCoroutine(SpawnObject(enemyIndex, Random.Range(minTime, maxTime)));
+			} else {
+				if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0){ //No more enemies, wave has been defeated
+					if (wave < waves.Length){
+						wave++;
+						enemyNumber = 0;
+					} else {
+						//TODO: Bring on the next level!
+					}
+				}
+			}
 		}
 		
 		if (isPlacing){
