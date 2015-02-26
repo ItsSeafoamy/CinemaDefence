@@ -45,6 +45,8 @@ public abstract class Enemy : MonoBehaviour {
 			if (health <= 0){
 				Kill();
 			}
+		} else {
+			Physics2D.IgnoreCollision(hit.collider, collider2D);
 		}
 	}
 	
