@@ -26,7 +26,7 @@ public abstract class Enemy : MonoBehaviour {
 	
 	[System.NonSerialized]
 	public List<Tower> watchers = new List<Tower>();
-	
+		
 	// Update is called once per frame
 	void Update (){
 		transform.Translate(Vector3.down * movementSpeed * Time.deltaTime);
@@ -38,18 +38,37 @@ public abstract class Enemy : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D hit){		
 		if (hit.gameObject.tag == "Bullet"){
 			Bullet b = hit.gameObject.GetComponent<Bullet>();
-			health -= b.damage;
+			Damage(b);
 			
 			Destroy(b.gameObject);
 			
 			if (health <= 0){
-				foreach (Tower t in watchers){
-					t.tracked.Remove(this);
-					t.SelectTarget();
-				}
-				
-				Destroy(gameObject);
+				Kill();
 			}
 		}
+	}
+	
+	/**
+	*	Called when this enemy is damaged.
+	*	This should be overriden by enemies that have weaknesses, resistances or some effect that occurs when damaged (e.g. Baby speeding up)
+	*/
+	protected virtual void Damage(Bullet bullet){
+		health -= bullet.damage;
+	}
+	
+	/**
+	*	Called when this enemy is destroyed.
+	*	This should be overriden if this enemy does something when killed.
+	*	For a boss, this could end the level,
+	*	Or to spawn the kids when the crazy mum is killed.
+	*	Unless for some reason the death is to be cancelled, this base method should be called from overriding methods
+	*/
+	protected virtual void Kill(){
+		foreach (Tower t in watchers){
+			t.tracked.Remove(this); //Stop towers from tracking this enemy
+			t.SelectTarget(); //And update the towers' targets
+		}
+		
+		Destroy(gameObject); //Destroy this enemy
 	}
 }
