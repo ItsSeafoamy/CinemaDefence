@@ -33,7 +33,7 @@ public abstract class Tower : MonoBehaviour {
 	
 	public Bullet bullet; //The bullet prefab this tower shoots
 
-	public float[] baseDamage; //How much damage this tower does under normal conditions
+	public float baseDamage; //How much damage this tower does under normal conditions
 	public float fireRate; //The delay between each shot, in seconds
 	protected float cooldown; //How long before we can fire again
 	
@@ -49,7 +49,6 @@ public abstract class Tower : MonoBehaviour {
 	protected Enemy target; //Which enemy we're currently targetting
 	
 	public abstract void Fire();
-	public abstract float GetDamage();
 	
 	void Update(){
 		if (cooldown < 0 && target != null){

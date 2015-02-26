@@ -33,9 +33,6 @@ public class PopcornGun : Tower {
 		bullet.shooter = this;
 		Vector3 dir = (target.transform.position - transform.position).normalized;
 		bullet.direction = dir;
-	}
-	
-	public override float GetDamage(){
-		return baseDamage[PopcornGun.currentLevel - 1];
+		bullet.damage = baseDamage;
 	}
 }

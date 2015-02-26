@@ -25,6 +25,7 @@ public class Bullet : MonoBehaviour {
 	
 	public float speed; //The speed of the bullet
 	public Vector3 direction; //The direction the bullet is moving in
+	public float damage; //How much this bullet does, before enemy resistances and weaknesses are applied
 	
 	void Start(){
 		StartCoroutine(Destroy());

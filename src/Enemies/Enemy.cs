@@ -19,8 +19,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public abstract class Enemy : MonoBehaviour 
-{
+public abstract class Enemy : MonoBehaviour {
+
 	public float health = 5;
 	public float movementSpeed = 10;
 	
@@ -28,11 +28,9 @@ public abstract class Enemy : MonoBehaviour
 	public List<Tower> watchers = new List<Tower>();
 	
 	// Update is called once per frame
-	void Update () 
-	{
+	void Update (){
 		transform.Translate(Vector3.down * movementSpeed * Time.deltaTime);
-		if(health <= 0)
-		{
+		if(health <= 0){
 			Destroy (gameObject);
 		}
 	}
@@ -40,8 +38,7 @@ public abstract class Enemy : MonoBehaviour
 	void OnCollisionEnter2D(Collision2D hit){		
 		if (hit.gameObject.tag == "Bullet"){
 			Bullet b = hit.gameObject.GetComponent<Bullet>();
-			Tower shooter = b.shooter;
-			health -= shooter.GetDamage();
+			health -= b.damage;
 			
 			Destroy(b.gameObject);
 			
