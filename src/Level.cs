@@ -23,9 +23,10 @@ public class Level : MonoBehaviour {
 	
 	public int scale; //How big, in pixels, each square on the invisible grid would be
 	
-	bool isPlacing = true; //If we're currently trying to place a tower. Defaulting to true for now for testing purposes :)
+	bool isPlacing = false; //If we're currently trying to place a tower.
 	
-	public HoloTower holoTower; //The "holotower" is the semi-transparent tower that shows you what tower and where you're placing it
+	HoloTower holoTower; //The "holotower" is the semi-transparent tower that shows you what tower and where you're placing it
+	public HoloTower[] holoTowers;
 	
 	public List<int> allowedLanes; //The lanes we can have towers in
 	public int minY, maxY; //The highest and lowest point we can place a tower (So we can't place towers outside the screen)
@@ -79,6 +80,28 @@ public class Level : MonoBehaviour {
 		
 		if (Input.GetKeyDown(KeyCode.Return)){
 			waiting = false;
+		}
+		
+		if (Input.GetKeyDown(KeyCode.Alpha1)){
+			if (holoTower != null){ //If there is already a holoTower, destroy it
+				Destroy(holoTower.gameObject);
+			}
+			
+			holoTower = (HoloTower) Instantiate(holoTowers[0]); //Create the new holotower
+			isPlacing = true; //We are now placing a tower
+		} else if (Input.GetKeyDown(KeyCode.Alpha2)){
+			if (holoTower != null){
+				Destroy(holoTower.gameObject);
+			}
+			
+			holoTower = (HoloTower) Instantiate(holoTowers[1]);
+			isPlacing = true;
+		} else if (Input.GetKeyDown(KeyCode.Escape)){
+			if (holoTower != null){
+				Destroy(holoTower.gameObject);
+			}
+			
+			isPlacing = false; //No longer placing towers
 		}
 		
 		if (isPlacing){
