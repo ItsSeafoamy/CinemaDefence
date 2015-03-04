@@ -46,7 +46,7 @@ public abstract class Enemy : MonoBehaviour {
 				Kill();
 			}
 		} else {
-			Physics2D.IgnoreCollision(hit.collider, collider2D);
+			Physics2D.IgnoreCollision(hit.collider, GetComponent<Collider2D>()); 
 		}
 	}
 	
