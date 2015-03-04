@@ -25,21 +25,23 @@ public class Level : MonoBehaviour {
 	
 	bool isPlacing = true; //If we're currently trying to place a tower. Defaulting to true for now for testing purposes :)
 	
-	public HoloTower holoTower;
+	public HoloTower holoTower; //The "holotower" is the semi-transparent tower that shows you what tower and where you're placing it
 	
-	public List<int> allowedLanes;
-	public int minY, maxY;
+	public List<int> allowedLanes; //The lanes we can have towers in
+	public int minY, maxY; //The highest and lowest point we can place a tower (So we can't place towers outside the screen)
 	
-	List<Tower> placedTowers = new List<Tower>();
+	List<Tower> placedTowers = new List<Tower>(); //A list of all towers currently on the field.
 	
-	public Vector2[] spawnPoints;
+	public Vector2[] spawnPoints; //A list of spawnpoints where enemies spawn. 
 	bool isSpawning = false;
 	public float minTime = 1f;
 	public float maxTime = 2f;
 	
-	public Wave[] waves;
-	int wave = 0;
+	public Wave[] waves; //The waves of enemies
+	int wave = 0; //Which wave we are currently on
 	int enemyNumber;
+	
+	bool waiting = true; //If we are currently waiting to advance to the next wave. 
 	
 	IEnumerator SpawnObject(int index, float seconds){
 		//make sure they're not all spawning on top of each oter
@@ -56,7 +58,7 @@ public class Level : MonoBehaviour {
 	
 	void Update(){
 		//check if spawned and if possible to spawn
-		if(!isSpawning){
+		if(!isSpawning && !waiting){
 			if (enemyNumber < waves[wave].enemies.Length){
 				enemyNumber++;
 				isSpawning = true; 
@@ -64,14 +66,19 @@ public class Level : MonoBehaviour {
 				StartCoroutine(SpawnObject(enemyIndex, Random.Range(minTime, maxTime)));
 			} else {
 				if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0){ //No more enemies, wave has been defeated
-					if (wave < waves.Length){
+					if (wave < waves.Length - 1){
 						wave++;
 						enemyNumber = 0;
+						waiting = true;
 					} else {
 						//TODO: Bring on the next level!
 					}
 				}
 			}
+		}
+		
+		if (Input.GetKeyDown(KeyCode.Return)){
+			waiting = false;
 		}
 		
 		if (isPlacing){
