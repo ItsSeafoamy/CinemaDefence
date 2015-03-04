@@ -29,7 +29,7 @@ public abstract class Enemy : MonoBehaviour {
 		
 	// Update is called once per frame
 	void Update (){
-		transform.Translate(Vector3.down * movementSpeed * Time.deltaTime);
+		Move();
 		if(health <= 0){
 			Destroy (gameObject);
 		}
@@ -48,6 +48,14 @@ public abstract class Enemy : MonoBehaviour {
 		} else {
 			Physics2D.IgnoreCollision(hit.collider, GetComponent<Collider2D>()); 
 		}
+	}
+	
+	/**
+	*	Called every update to move this enemy
+	*	Should be overriden for enemies with irregular movement patterns (e.g. The old lady with the rabbit hopping then stopping)
+	*/
+	protected virtual void Move(){
+		transform.Translate(Vector3.down * movementSpeed * Time.deltaTime);
 	}
 	
 	/**
