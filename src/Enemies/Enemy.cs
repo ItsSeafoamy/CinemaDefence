@@ -26,9 +26,16 @@ public abstract class Enemy : MonoBehaviour {
 	
 	[System.NonSerialized]
 	public List<Tower> watchers = new List<Tower>();
+	
+	[System.NonSerialized]
+	public List<Effect> effects = new List<Effect>();
 		
 	// Update is called once per frame
 	void Update (){
+		foreach (Effect e in effects){
+			e.OnUpdate(this);
+		}
+		
 		Move();
 		if(health <= 0){
 			Destroy (gameObject);
@@ -80,5 +87,28 @@ public abstract class Enemy : MonoBehaviour {
 		}
 		
 		Destroy(gameObject); //Destroy this enemy
+	}
+	
+	/**
+	*	Apply a new effect to this enemy
+	*	If callEvent is true, effect.OnApplied will be called
+	*/
+	public void AddEffect(Effect effect, bool callEvent = true){
+		effects.Add(effect);
+		
+		if (callEvent) effect.OnApplied(this);
+	}
+	
+	/**
+	*	Remove an existing effect from this enemy
+	*	Does nothing if the effect was not applied
+	*	If callEvent is true, effect.OnRemoved will be called
+	*/
+	public void RemoveEffect(Effect effect, bool callEvent = true){
+		if (effects.Contains(effect)){
+			effects.Remove(effect);
+			
+			if (callEvent) effect.OnRemoved(this);
+		}
 	}
 }
