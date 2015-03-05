@@ -17,6 +17,7 @@
 */
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Bullet : MonoBehaviour {
 	
@@ -27,12 +28,18 @@ public class Bullet : MonoBehaviour {
 	public Vector3 direction; //The direction the bullet is moving in
 	public float damage; //How much this bullet does, before enemy resistances and weaknesses are applied
 	
+	public List<Effect> effects = new List<Effect>();
+	
 	void Start(){
 		StartCoroutine(Destroy());
 	}
 	
 	void Update(){
 		transform.Translate(direction * speed * Time.deltaTime); //Move the bullet
+	}
+	
+	public void AddEffect(Effect effect){
+		effects.Add(effect);
 	}
 	
 	IEnumerator Destroy(){

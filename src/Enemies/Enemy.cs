@@ -45,6 +45,11 @@ public abstract class Enemy : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D hit){		
 		if (hit.gameObject.tag == "Bullet"){
 			Bullet b = hit.gameObject.GetComponent<Bullet>();
+			
+			foreach (Effect e in b.effects){
+				AddEffect(e);
+			}
+			
 			Damage(b);
 			
 			Destroy(b.gameObject);

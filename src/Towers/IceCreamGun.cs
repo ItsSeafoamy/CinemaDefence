@@ -18,28 +18,25 @@
 using UnityEngine;
 using System.Collections;
 
-public class Slowness : Effect {
+public class IceCreamGun : Tower {
+
+	public static int[] upgradeCost {get; protected set;}
+	public static int currentLevel {get; set;}
 	
-	float speedModifier;
-	
-	public Slowness(float speedModifier){
-		this.speedModifier = speedModifier;
+	static IceCreamGun() {
+		upgradeCost = new int[]{0, 1000, 10000}; //All values subject to change, and probably will
+		currentLevel = 1;
 	}
 	
-	public void OnApplied(Enemy enemy){
-		foreach (Effect effect in enemy.effects){
-			if (effect is Slowness && effect != this){ //If the enemy already has slowness
-				enemy.RemoveEffect(this, false); //Remove this effect. Do not call event to prevent speeding up
-				return;
-			}
-		}
+	public override void Fire(){
+		Bullet bullet = (Bullet) Instantiate(this.bullet, transform.position, Quaternion.identity);
+		bullet.shooter = this;
+		Vector3 dir = (target.transform.position - transform.position).normalized;
+		bullet.direction = dir;
+		bullet.damage = baseDamage;
+		bullet.AddEffect(new Slowness(0.5f));
 		
-		enemy.movementSpeed *= speedModifier; //Slow down the enemy (Speedmodifier should be less than 1).
-	}
-	
-	public void OnUpdate(Enemy enemy){}
-	
-	public void OnRemoved(Enemy enemy){
-		enemy.movementSpeed /= speedModifier; //Reset the movement speed
+		tracked.Remove(target);
+		SelectTarget();
 	}
 }
