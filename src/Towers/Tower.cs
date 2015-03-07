@@ -63,7 +63,6 @@ public abstract class Tower : MonoBehaviour {
 	*	Fired when another collider enters this tower's trigger zone, should be an enemy
 	*/
 	void OnTriggerEnter2D(Collider2D other){
-		Debug.Log("Triggered");
 		if (other.tag == "Enemy"){ //[Safety] Check if the collider was an enemy
 			Enemy e = other.GetComponent<Enemy>();
 			tracked.Add(e); //Add the enemy to the list of tracked enemies

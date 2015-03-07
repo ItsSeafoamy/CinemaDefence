@@ -41,12 +41,16 @@ public class Level : MonoBehaviour {
 	public Wave[] waves; //The waves of enemies
 	int wave = 0; //Which wave we are currently on
 	int enemyNumber;
+	bool waiting = true; //If we are currently waiting to advance to the next wave.
 	
-	bool waiting = true; //If we are currently waiting to advance to the next wave. 
+	public int childPrice, studentPrice, adultPrice;
+	public float popularity;
+	float nextPurchase = 3f;
+	
+	float happiness = 100f;
 	
 	IEnumerator SpawnObject(int index, float seconds){
 		//make sure they're not all spawning on top of each oter
-		Debug.Log ("Waiting for " + seconds + " seconds");
 		yield return new WaitForSeconds(seconds);
 		
 		System.Random rand = new System.Random();
@@ -58,6 +62,54 @@ public class Level : MonoBehaviour {
 	}
 	
 	void Update(){
+		if (!waiting){
+			if (nextPurchase <= 0){
+				switch (Random.Range(0, 4)){
+				case 0:
+					int sales = Random.Range(1,2);
+					int gained = adultPrice * sales;
+					Game.money += gained;
+					Debug.Log(sales + " adult ticket" + (sales == 2 ? "s" : "") + " sold for " + gained + "G! (Total: " + Game.money + "G)");
+					break;
+				case 1:
+					int sales1 = Random.Range(1, 4);
+					int gained1 = adultPrice * sales1;
+					Game.money += gained1;
+					Debug.Log(sales1 + " adult ticket" + (sales1 == 2 ? "s" : "") + " sold for " + gained1 + "G! (Total: " + Game.money + "G)");
+					break;
+				case 2:
+					int children = Random.Range(1, 3);
+					int adult = Random.Range(1, 2);
+					int gained2 = (adultPrice * adult) + (childPrice * children);
+					Game.money += gained2;
+					Debug.Log(adult + " adult ticket" + (adult == 2 ? "s" : "") + " and " + children + " child ticket" + (children == 2 ? "s" : "") + " sold for " + gained2 + "G! (Total: " + Game.money + "G)");
+					break;
+				case 3:
+					int students = Random.Range(1,2);
+					int gained3 = studentPrice * students;
+					Game.money += gained3;
+					Debug.Log(students + " student ticket" + (students == 2 ? "s" : "") + " sold for " + gained3 + "G! (Total: " + Game.money + "G)");
+					break;
+				case 4:
+					int students2 = Random.Range(1, 6);
+					int gained4 = adultPrice * students2;
+					Game.money += gained4;
+					Debug.Log(students2 + " student ticket" + (students2 == 2 ? "s" : "") + " sold for " + gained4 + "G! (Total: " + Game.money + "G)");
+					break;
+				case 5:
+					int childs = Random.Range(3, 10);
+					int gained5 = childPrice * childs;
+					Game.money += gained5;
+					Debug.Log(childs + " student ticket" + (childs == 2 ? "s" : "") + " sold for " + childs + "G! (Total: " + Game.money + "G)");
+					break;
+				}
+				
+				nextPurchase = 10 - (popularity * Random.Range(0.5f, 1));
+			} else {
+				nextPurchase -= Time.deltaTime;
+			}
+		}
+		
 		//check if spawned and if possible to spawn
 		if(!isSpawning && !waiting){
 			if (enemyNumber < waves[wave].enemies.Length){
