@@ -20,6 +20,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Level : MonoBehaviour {
+
+	public static Level instance;
 	
 	public int scale; //How big, in pixels, each square on the invisible grid would be
 	
@@ -47,7 +49,8 @@ public class Level : MonoBehaviour {
 	public float popularity;
 	float nextPurchase = 3f;
 	
-	float happiness = 100f;
+	[System.NonSerialized]
+	public float happiness = 100f; //Your life
 	
 	IEnumerator SpawnObject(int index, float seconds){
 		//make sure they're not all spawning on top of each oter
@@ -59,6 +62,10 @@ public class Level : MonoBehaviour {
 		Instantiate(waves[wave][index], new Vector3((point.x + 0.5f) * scale / 100f, (point.y + 0.5f) * scale / 100f), transform.rotation);
 		
 		isSpawning = false;
+	}
+	
+	void Start(){
+		instance = this;
 	}
 	
 	void Update(){
