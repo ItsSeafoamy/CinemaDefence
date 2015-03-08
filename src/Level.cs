@@ -179,13 +179,14 @@ public class Level : MonoBehaviour {
 			
 			holoTower.transform.position = new Vector3((point.x * scale) / 100f, (point.y * scale) / 100f); //Move the holo tower to the nearest snap-point to the mouse
 			
-			if (point.y >= minY && point.y <= maxY && allowedLanes.Contains(Mathf.FloorToInt(point.x))){ //When the mouse button is pressed
-				if (Input.GetButtonDown("Fire1")){
+			if (point.y >= minY && point.y <= maxY && allowedLanes.Contains(Mathf.FloorToInt(point.x)) && holoTower.toSpawn.buy <= Game.money){ 
+				if (Input.GetButtonDown("Fire1")){ //When the mouse button is pressed
 					Tower tower = GetTower(holoTower.transform.position);
 					
 					if (tower == null){
 						Tower t = (Tower) Instantiate(holoTower.toSpawn, holoTower.transform.position, holoTower.transform.rotation); //Spawn the tower
 						placedTowers.Add(t);
+						Game.money -= t.buy;
 					} else {
 						placedTowers.Remove(tower);
 						Destroy(tower.gameObject);

@@ -24,7 +24,7 @@ using System.Collections;
 */
 public class Game {
 	
-	public static int money; //How much money the player currently has.
+	public static int money = 100; //How much money the player currently has.
 		
 	//Statistics
 	public static int shotsFired = 0; //Total time all towers have fired
