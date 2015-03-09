@@ -44,10 +44,12 @@ public class Level : MonoBehaviour {
 	int wave = 0; //Which wave we are currently on
 	int enemyNumber;
 	bool waiting = true; //If we are currently waiting to advance to the next wave.
+	bool waitingForNextLevel = false;
 	
 	public int childPrice, studentPrice, adultPrice;
 	public float popularity;
 	float nextPurchase = 3f;
+	public int victoryBonus;
 	
 	[System.NonSerialized]
 	public float happiness = 100f; //Your life
@@ -56,10 +58,12 @@ public class Level : MonoBehaviour {
 		//make sure they're not all spawning on top of each oter
 		yield return new WaitForSeconds(seconds);
 		
-		System.Random rand = new System.Random();
-		Vector2 point = spawnPoints[rand.Next(spawnPoints.Length)];
-		
-		Instantiate(waves[wave][index], new Vector3((point.x + 0.5f) * scale / 100f, (point.y + 0.5f) * scale / 100f), transform.rotation);
+		if (waves[wave][index] != null){
+			System.Random rand = new System.Random();
+			Vector2 point = spawnPoints[rand.Next(spawnPoints.Length)];
+			
+			Instantiate(waves[wave][index], new Vector3((point.x + 0.5f) * scale / 100f, (point.y + 0.5f) * scale / 100f), transform.rotation);
+		}
 		
 		isSpawning = false;
 	}
@@ -118,12 +122,12 @@ public class Level : MonoBehaviour {
 		}
 		
 		//check if spawned and if possible to spawn
-		if(!isSpawning && !waiting){
+		if(!isSpawning && !waiting && !waitingForNextLevel){
 			if (enemyNumber < waves[wave].enemies.Length){
-				enemyNumber++;
 				isSpawning = true; 
-				int enemyIndex = Random.Range(0, waves[wave].enemies.Length);
-				StartCoroutine(SpawnObject(enemyIndex, Random.Range(minTime, maxTime)));
+				//int enemyIndex = Random.Range(0, waves[wave].enemies.Length);
+				StartCoroutine(SpawnObject(enemyNumber, Random.Range(minTime, maxTime)));
+				enemyNumber++;
 			} else {
 				if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0){ //No more enemies, wave has been defeated
 					if (wave < waves.Length - 1){
@@ -131,14 +135,24 @@ public class Level : MonoBehaviour {
 						enemyNumber = 0;
 						waiting = true;
 					} else {
-						//TODO: Bring on the next level!
+						Game.money += victoryBonus;
+						Debug.Log("Congratulations! Here's " + victoryBonus + "G for your hard work");
+						waitingForNextLevel = true;
+						
+						if (holoTower != null){
+							Destroy(holoTower.gameObject);
+						}
 					}
 				}
 			}
 		}
 		
-		if (Input.GetKeyDown(KeyCode.Return)){
+		if (waiting && Input.GetKeyDown(KeyCode.Return)){
 			waiting = false;
+		} 
+		
+		if (waitingForNextLevel && Input.GetKeyDown(KeyCode.Return)){
+			//TODO: Bring on the next level!
 		}
 		
 		if (Input.GetKeyDown(KeyCode.Alpha1)){
@@ -170,7 +184,7 @@ public class Level : MonoBehaviour {
 			isPlacing = false; //No longer placing towers
 		}
 		
-		if (isPlacing){
+		if (isPlacing && !waitingForNextLevel){
 			Vector3 point3 = Input.mousePosition; //Gets the position of the mouse on the screen
 			Vector2 point = new Vector2(point3.x - (Screen.width / 2f), point3.y - (Screen.height / 2f)); //Convert to a 2D point with the origin in the center of the screen
 			point /= scale; 
